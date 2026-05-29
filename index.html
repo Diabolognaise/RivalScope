@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RivalScope — Competitor Intelligence, Automated</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#08090a;--bg2:#0f1012;--bg3:#16181c;
+  --border:#ffffff18;--border2:#ffffff28;
+  --text:#f2f1ee;--muted:#a0a09e;
+  --accent:#e8d5a3;--accent2:#c9a96e;
+  --green:#3ecf8e;--red:#ff7070;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;overflow-x:hidden}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 3rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(8,9,10,0.88);backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.2rem;font-weight:600;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;background:var(--accent2);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:16px;height:16px;fill:none;stroke:#08090a;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+nav ul{display:flex;gap:2rem;list-style:none}
+nav ul a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color .2s}
+nav ul a:hover{color:var(--text)}
+.nav-cta{background:var(--accent);color:#08090a;padding:0.5rem 1.2rem;border-radius:6px;font-size:0.88rem;font-weight:600;text-decoration:none}
+.hero{text-align:center;padding:7rem 2rem 5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(200,169,110,0.1) 0%,transparent 70%);pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;color:var(--muted);margin-bottom:2rem}
+.badge-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+h1{font-size:clamp(2.8rem,6vw,4.8rem);font-family:'Instrument Serif',serif;font-weight:400;line-height:1.1;letter-spacing:-0.02em;margin-bottom:1.5rem;max-width:820px;margin-left:auto;margin-right:auto;color:var(--text)}
+h1 em{font-style:italic;color:var(--accent2)}
+.hero-sub{color:var(--muted);font-size:1.1rem;line-height:1.7;max-width:520px;margin:0 auto 2.5rem;font-weight:300}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem}
+.btn-primary{background:var(--accent);color:#08090a;padding:0.85rem 2rem;border-radius:8px;font-size:0.95rem;font-weight:600;text-decoration:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-secondary{background:transparent;color:var(--text);padding:0.85rem 2rem;border-radius:8px;font-size:0.95rem;text-decoration:none;border:1px solid var(--border2);cursor:pointer;font-family:'DM Sans',sans-serif}
+.dashboard-preview{max-width:860px;margin:0 auto;background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.6)}
+.db-header{background:var(--bg3);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;gap:8px}
+.db-dot{width:10px;height:10px;border-radius:50%}
+.db-header span{font-size:0.8rem;color:var(--muted);margin-left:8px}
+.db-body{padding:1.5rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.db-stat{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem}
+.db-stat-label{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem}
+.db-stat-val{font-size:1.6rem;font-family:'Instrument Serif',serif;color:var(--text)}
+.db-stat-change{font-size:0.75rem;margin-top:4px}
+.up{color:var(--red)}.dw{color:var(--green)}
+.db-alerts{grid-column:1/-1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.db-alerts-header{padding:0.75rem 1.2rem;border-bottom:1px solid var(--border);font-size:0.8rem;color:var(--muted);display:flex;justify-content:space-between}
+.alert-row{display:flex;align-items:center;gap:1rem;padding:0.85rem 1.2rem;border-bottom:1px solid var(--border)}
+.alert-row:last-child{border-bottom:none}
+.alert-tag{font-size:0.7rem;padding:3px 8px;border-radius:4px;font-weight:600}
+.tag-price{background:rgba(255,112,112,0.15);color:#ff9090}
+.tag-content{background:rgba(62,207,142,0.12);color:#5ddba0}
+.alert-company{font-size:0.88rem;font-weight:600;flex:1;color:var(--text)}
+.alert-desc{font-size:0.8rem;color:var(--muted);flex:2}
+.alert-time{font-size:0.75rem;color:var(--muted);white-space:nowrap}
+section.features{padding:6rem 2rem;max-width:1100px;margin:0 auto}
+.section-label{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent2);margin-bottom:1rem}
+.section-title{font-family:'Instrument Serif',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.2;margin-bottom:1rem;color:var(--text)}
+.section-sub{color:var(--muted);font-size:1rem;line-height:1.7;max-width:500px;margin-bottom:3.5rem;font-weight:300}
+.features-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
+.feat-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.75rem}
+.feat-icon{width:40px;height:40px;background:rgba(232,213,163,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem}
+.feat-icon svg{width:20px;height:20px;fill:none;stroke:var(--accent2);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.feat-card h3{font-size:1rem;font-weight:600;margin-bottom:0.5rem;color:var(--text)}
+.feat-card p{font-size:0.875rem;color:var(--muted);line-height:1.7}
+section.pricing{padding:6rem 2rem;max-width:960px;margin:0 auto;text-align:center}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-top:3rem;text-align:left}
+.plan{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative}
+.plan.featured{border-color:var(--accent2)}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent2);color:#08090a;font-size:0.72rem;font-weight:700;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.plan-name{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:1rem}
+.plan-price{font-family:'Instrument Serif',serif;font-size:2.8rem;color:var(--text);line-height:1;margin-bottom:0.3rem}
+.plan-price span{font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:300;color:var(--muted)}
+.plan-desc{font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.5}
+.plan-divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem}
+.plan-features li{display:flex;align-items:flex-start;gap:8px;font-size:0.875rem;color:var(--text)}
+.check{width:16px;height:16px;flex-shrink:0;margin-top:1px}
+.check-yes{color:var(--green)}.check-no{color:#3a3a3a}
+.plan-btn{width:100%;padding:0.8rem;border-radius:8px;font-size:0.9rem;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text);font-family:'DM Sans',sans-serif}
+.plan.featured .plan-btn{background:var(--accent);color:#08090a;border-color:var(--accent);font-weight:600}
+.social-proof{padding:4rem 2rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;background:var(--bg2)}
+.social-proof p{font-size:0.85rem;color:var(--muted);margin-bottom:2rem}
+.logos{display:flex;align-items:center;justify-content:center;gap:3rem;flex-wrap:wrap;opacity:0.45}
+.logo-pill{background:var(--bg3);border:1px solid var(--border2);padding:6px 16px;border-radius:100px;font-size:0.78rem;font-weight:600;letter-spacing:0.06em;color:var(--muted)}
+section.cta{padding:7rem 2rem;text-align:center}
+section.cta h2{font-family:'Instrument Serif',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:400;line-height:1.15;margin-bottom:1rem;color:var(--text)}
+section.cta h2 em{font-style:italic;color:var(--accent2)}
+section.cta p{color:var(--muted);font-size:1rem;margin-bottom:2.5rem}
+footer{padding:2rem 3rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+footer p{font-size:0.8rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/></svg>
+    </div>
+    RivalScope
+  </a>
+  <ul>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <a href="#pricing" class="nav-cta">Start free →</a>
+</nav>
+
+<section class="hero">
+  <div class="badge"><span class="badge-dot"></span> Live intelligence on your competitors</div>
+  <h1>Know every move<br/>your rivals make,<br/><em>before you don't.</em></h1>
+  <p class="hero-sub">RivalScope automatically monitors competitor prices and content — and turns it into clear, actionable intelligence delivered to your inbox.</p>
+  <div class="hero-btns">
+    <a href="#pricing" class="btn-primary">Start for free</a>
+    <a href="#features" class="btn-secondary">See how it works</a>
+  </div>
+  <div class="dashboard-preview">
+    <div class="db-header">
+      <div class="db-dot" style="background:#ff5f57"></div>
+      <div class="db-dot" style="background:#febc2e"></div>
+      <div class="db-dot" style="background:#28c840"></div>
+      <span>RivalScope — Dashboard</span>
+    </div>
+    <div class="db-body">
+      <div class="db-stat"><div class="db-stat-label">Alerts today</div><div class="db-stat-val">14</div><div class="db-stat-change up">↑ 3 new since yesterday</div></div>
+      <div class="db-stat"><div class="db-stat-label">Price changes</div><div class="db-stat-val">6</div><div class="db-stat-change up">↑ avg −12% on monitored SKUs</div></div>
+      <div class="db-stat"><div class="db-stat-label">Rivals tracked</div><div class="db-stat-val">5</div><div class="db-stat-change dw">✓ All live</div></div>
+      <div class="db-alerts">
+        <div class="db-alerts-header"><span>Recent alerts</span><span>Last 24h</span></div>
+        <div class="alert-row"><span class="alert-tag tag-price">Price</span><span class="alert-company">Acme Corp</span><span class="alert-desc">Pro plan dropped from $99 → $79/mo</span><span class="alert-time">2h ago</span></div>
+        <div class="alert-row"><span class="alert-tag tag-content">Content</span><span class="alert-company">Nexio</span><span class="alert-desc">New landing page targeting "enterprise" keyword</span><span class="alert-time">5h ago</span></div>
+        <div class="alert-row"><span class="alert-tag tag-price">Price</span><span class="alert-company">Stratify</span><span class="alert-desc">Added annual discount — 20% off all plans</span><span class="alert-time">11h ago</span></div>
+        <div class="alert-row"><span class="alert-tag tag-content">Content</span><span class="alert-company">Vantex</span><span class="alert-desc">Published 3 new blog posts — pushing SEO hard</span><span class="alert-time">18h ago</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="social-proof">
+  <p>Trusted by growth teams at forward-thinking companies</p>
+  <div class="logos">
+    <span class="logo-pill">LUMIO</span>
+    <span class="logo-pill">VERTAX</span>
+    <span class="logo-pill">DATAFIELD</span>
+    <span class="logo-pill">NOVALABS</span>
+    <span class="logo-pill">CLARIX</span>
+  </div>
+</div>
+
+<section class="features" id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Everything your team needs to stay one step ahead</h2>
+  <p class="section-sub">No more manual googling. No more missed pricing moves. RivalScope runs 24/7 so you don't have to.</p>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/></svg></div>
+      <h3>Real-time price tracking</h3>
+      <p>Detect price changes the moment they happen. Get instant alerts when a competitor adjusts their pricing — never be caught off-guard again.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg></div>
+      <h3>Content & offer monitoring</h3>
+      <p>Track homepage updates, new product pages, and blog posts. Know when rivals shift their messaging or launch new offers.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m0 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v14z"/></svg></div>
+      <h3>AI-powered summaries</h3>
+      <p>Our AI synthesizes changes into clear, prioritized insights — so you always know what actually matters.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg></div>
+      <h3>Daily & weekly digests</h3>
+      <p>Receive a beautifully formatted email digest — weekly on Free, daily on Pro, real-time on Business.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <h3>Instant alerts</h3>
+      <p>Critical change detected? We notify you immediately — no waiting for the next digest. React before the market does.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z"/></svg></div>
+      <h3>Exportable PDF reports</h3>
+      <p>Export polished reports for stakeholders. Demonstrate market awareness with professional, shareable intelligence.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title" style="margin:0 auto 1rem">Simple, transparent pricing</h2>
+  <p class="section-sub" style="margin:0 auto">No hidden fees. Cancel anytime. Start free, upgrade when you're ready.</p>
+  <div class="pricing-grid">
+    <div class="plan">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">$0 <span>/month</span></div>
+      <div class="plan-desc">For individuals testing the waters.</div>
+      <hr class="plan-divider"/>
+      <ul class="plan-features">
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>1 competitor tracked</li>
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>Weekly digest email</li>
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>Price & content monitoring</li>
+        <li><svg class="check check-no" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="4" y1="4" x2="12" y2="12"/><line x1="12" y1="4" x2="4" y2="12"/></svg><span style="color:var(--muted)">AI summaries</span></li>
+        <li><svg class="check check-no" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="4" y1="4" x2="12" y2="12"/><line x1="12" y1="4" x2="4" y2="12"/></svg><span style="color:var(--muted)">PDF export</span></li>
+      </ul>
+      <button class="plan-btn">Get started free</button>
+    </div>
+    <div class="plan featured">
+      <div class="plan-badge">MOST POPULAR</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$25 <span>/month</span></div>
+      <div class="plan-desc">For growing teams serious about competitive edge.</div>
+      <hr class="plan-divider"/>
+      <ul class="plan-features">
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>5 competitors tracked</li>
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>Daily digest email</li>
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>Price & content monitoring</li>
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>AI-powered summaries</li>
+        <li><svg class="check check-no" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="4" y1="4" x2="12" y2="12"/><line x1="12" y1="4" x2="4" y2="12"/></svg><span style="color:var(--muted)">PDF export</span></li>
+      </ul>
+      <button class="plan-btn">Start Pro — $25/mo</button>
+    </div>
+    <div class="plan">
+      <div class="plan-name">Business</div>
+      <div class="plan-price">$70 <span>/month</span></div>
+      <div class="plan-desc">For companies where intelligence is a competitive weapon.</div>
+      <hr class="plan-divider"/>
+      <ul class="plan-features">
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>20 competitors tracked</li>
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>Real-time alerts</li>
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>Price & content monitoring</li>
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>AI-powered summaries</li>
+        <li><svg class="check check-yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3,8 6.5,12 13,4"/></svg>PDF export</li>
+      </ul>
+      <button class="plan-btn">Start Business — $70/mo</button>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Stop guessing.<br/><em>Start knowing.</em></h2>
+  <p>Your competitors are moving. RivalScope makes sure you always see it first.</p>
+  <a href="#pricing" class="btn-primary" style="font-size:1rem;padding:1rem 2.5rem;display:inline-block">Get started for free →</a>
+</section>
+
+<footer>
+  <div class="logo" style="font-size:1rem">
+    <div class="logo-icon" style="width:24px;height:24px">
+      <svg viewBox="0 0 16 16" style="width:12px;height:12px"><circle cx="8" cy="8" r="5"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/></svg>
+    </div>
+    RivalScope
+  </div>
+  <p>© 2026 RivalScope. All rights reserved.</p>
+  <div style="display:flex;gap:1.5rem">
+    <a href="#" style="color:var(--muted);text-decoration:none;font-size:0.8rem">Privacy</a>
+    <a href="#" style="color:var(--muted);text-decoration:none;font-size:0.8rem">Terms</a>
+    <a href="#" style="color:var(--muted);text-decoration:none;font-size:0.8rem">Contact</a>
+  </div>
+</footer>
+</body>
+</html>
