@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Contact — RivalScope</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#08090a;--bg2:#0f1012;--bg3:#16181c;--border:#ffffff18;--border2:#ffffff28;--text:#f2f1ee;--muted:#a0a09e;--accent:#e8d5a3;--accent2:#c9a96e;--green:#3ecf8e}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.7}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 3rem;border-bottom:1px solid var(--border);background:rgba(8,9,10,0.88);backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.2rem;font-weight:600;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;background:var(--accent2);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:16px;height:16px;fill:none;stroke:#08090a;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.content{max-width:640px;margin:0 auto;padding:5rem 2rem}
+h1{font-family:'Instrument Serif',serif;font-size:2.8rem;font-weight:400;margin-bottom:0.5rem;color:var(--text)}
+.subtitle{font-size:1rem;color:var(--muted);margin-bottom:3rem;font-weight:300}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:3rem}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem}
+.card-icon{width:36px;height:36px;background:rgba(232,213,163,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+.card-icon svg{width:18px;height:18px;fill:none;stroke:var(--accent2);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.3rem}
+.card p{font-size:0.82rem;color:var(--muted);margin-bottom:0.75rem;line-height:1.5}
+.card a{font-size:0.85rem;color:var(--accent2);text-decoration:none;font-weight:500}
+.form-section h2{font-family:'Instrument Serif',serif;font-size:1.6rem;font-weight:400;color:var(--text);margin-bottom:0.5rem}
+.form-section p{font-size:0.9rem;color:var(--muted);margin-bottom:2rem}
+.field{margin-bottom:1.25rem}
+label{display:block;font-size:0.82rem;color:var(--muted);margin-bottom:0.4rem;font-weight:500}
+input,textarea,select{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:0.75rem 1rem;font-size:0.9rem;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--accent2)}
+textarea{resize:vertical;min-height:130px}
+select option{background:var(--bg2);color:var(--text)}
+.btn-submit{width:100%;background:var(--accent);color:#08090a;padding:0.85rem;border-radius:8px;font-size:0.95rem;font-weight:600;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:0.5rem;transition:opacity .2s}
+.btn-submit:hover{opacity:0.85}
+.success{display:none;background:rgba(62,207,142,0.08);border:1px solid rgba(62,207,142,0.2);border-radius:10px;padding:1.25rem 1.5rem;margin-top:1rem}
+.success p{color:var(--green);font-size:0.9rem;margin:0}
+footer{padding:2rem 3rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;margin-top:4rem}
+footer p{font-size:0.8rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/></svg>
+    </div>
+    RivalScope
+  </a>
+</nav>
+
+<div class="content">
+  <h1>Get in touch</h1>
+  <p class="subtitle">We typically reply within a few hours on business days.</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg></div>
+      <h3>General enquiries</h3>
+      <p>Questions about RivalScope or our plans.</p>
+      <a href="mailto:hello@rivalscope.com">hello@rivalscope.com</a>
+    </div>
+    <div class="card">
+      <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm-5 0a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/></svg></div>
+      <h3>Support</h3>
+      <p>Need help with your account or the service.</p>
+      <a href="mailto:support@rivalscope.com">support@rivalscope.com</a>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>Send us a message</h2>
+    <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+
+    <div class="field">
+      <label for="name">Your name</label>
+      <input type="text" id="name" placeholder="Jane Smith"/>
+    </div>
+    <div class="field">
+      <label for="email">Email address</label>
+      <input type="email" id="email" placeholder="jane@company.com"/>
+    </div>
+    <div class="field">
+      <label for="subject">Subject</label>
+      <select id="subject">
+        <option value="">Select a topic...</option>
+        <option>General question</option>
+        <option>Billing & subscription</option>
+        <option>Technical support</option>
+        <option>Feature request</option>
+        <option>Partnership</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="message">Message</label>
+      <textarea id="message" placeholder="Tell us how we can help..."></textarea>
+    </div>
+    <button class="btn-submit" onclick="handleSubmit()">Send message →</button>
+    <div class="success" id="success">
+      <p>✓ Message sent! We'll get back to you within a few hours.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="logo" style="font-size:1rem">
+    <div class="logo-icon" style="width:24px;height:24px">
+      <svg viewBox="0 0 16 16" style="width:12px;height:12px"><circle cx="8" cy="8" r="5"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/></svg>
+    </div>
+    RivalScope
+  </div>
+  <p>© 2026 RivalScope. All rights reserved.</p>
+  <div style="display:flex;gap:1.5rem">
+    <a href="privacy.html" style="color:var(--muted);text-decoration:none;font-size:0.8rem">Privacy</a>
+    <a href="terms.html" style="color:var(--muted);text-decoration:none;font-size:0.8rem">Terms</a>
+    <a href="contact.html" style="color:var(--muted);text-decoration:none;font-size:0.8rem">Contact</a>
+  </div>
+</footer>
+
+<script>
+function handleSubmit(){
+  const name=document.getElementById('name').value;
+  const email=document.getElementById('email').value;
+  const message=document.getElementById('message').value;
+  if(!name||!email||!message){alert('Please fill in all required fields.');return;}
+  document.getElementById('success').style.display='block';
+  document.querySelector('.btn-submit').disabled=true;
+  document.querySelector('.btn-submit').style.opacity='0.5';
+}
+</script>
+</body>
+</html>
