@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RivalScope — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#08090a;--bg2:#0f1012;--bg3:#16181c;--border:#ffffff18;--border2:#ffffff28;--text:#f2f1ee;--muted:#a0a09e;--accent:#e8d5a3;--accent2:#c9a96e;--green:#3ecf8e;--red:#ff7070}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--border);background:rgba(8,9,10,0.88);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.1rem;font-weight:600;color:var(--text);text-decoration:none}
+.logo-icon{width:28px;height:28px;background:var(--accent2);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:14px;height:14px;fill:none;stroke:#08090a;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.user-email{font-size:0.82rem;color:var(--muted)}
+.btn-logout{background:transparent;border:1px solid var(--border2);color:var(--muted);padding:0.4rem 1rem;border-radius:6px;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn-logout:hover{color:var(--text);border-color:var(--text)}
+
+/* AUTH */
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 61px);padding:2rem}
+.auth-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:400px}
+.auth-box h1{font-family:'Instrument Serif',serif;font-size:2rem;font-weight:400;margin-bottom:0.4rem;color:var(--text)}
+.auth-box p{font-size:0.88rem;color:var(--muted);margin-bottom:2rem}
+.tabs{display:flex;gap:0;margin-bottom:2rem;background:var(--bg3);border-radius:8px;padding:4px}
+.tab{flex:1;padding:0.5rem;text-align:center;font-size:0.85rem;cursor:pointer;border-radius:6px;color:var(--muted);transition:all .2s;border:none;background:transparent;font-family:'DM Sans',sans-serif}
+.tab.active{background:var(--bg2);color:var(--text);font-weight:500}
+.field{margin-bottom:1.1rem}
+label{display:block;font-size:0.8rem;color:var(--muted);margin-bottom:0.4rem}
+input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:0.7rem 1rem;font-size:0.9rem;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
+input:focus{border-color:var(--accent2)}
+.btn-auth{width:100%;background:var(--accent);color:#08090a;padding:0.8rem;border-radius:8px;font-size:0.92rem;font-weight:600;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:0.5rem;transition:opacity .2s}
+.btn-auth:hover{opacity:0.85}
+.auth-error{font-size:0.82rem;color:var(--red);margin-top:0.75rem;display:none}
+.auth-success{font-size:0.82rem;color:var(--green);margin-top:0.75rem;display:none}
+
+/* DASHBOARD */
+#dashboard-screen{display:none;max-width:1000px;margin:0 auto;padding:2.5rem 2rem}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem}
+.dash-header h2{font-family:'Instrument Serif',serif;font-size:2rem;font-weight:400;color:var(--text)}
+.btn-add{background:var(--accent);color:#08090a;padding:0.6rem 1.4rem;border-radius:8px;font-size:0.88rem;font-weight:600;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s}
+.btn-add:hover{opacity:0.85}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem}
+.stat-label{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem}
+.stat-val{font-size:1.8rem;font-family:'Instrument Serif',serif;color:var(--text)}
+.stat-sub{font-size:0.75rem;color:var(--muted);margin-top:4px}
+
+/* COMPETITORS */
+.section-title{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:1rem}
+.competitors-list{display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2.5rem}
+.competitor-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1rem}
+.comp-favicon{width:36px;height:36px;background:var(--bg3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.comp-info{flex:1}
+.comp-name{font-size:0.95rem;font-weight:500;color:var(--text);margin-bottom:2px}
+.comp-url{font-size:0.8rem;color:var(--muted)}
+.comp-status{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--green)}
+.comp-dot{width:6px;height:6px;background:var(--green);border-radius:50%}
+.btn-delete{background:transparent;border:none;color:var(--muted);cursor:pointer;padding:0.4rem;border-radius:6px;transition:color .2s;font-size:0.8rem}
+.btn-delete:hover{color:var(--red)}
+.empty-state{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:3rem;text-align:center}
+.empty-state p{color:var(--muted);font-size:0.9rem;margin-bottom:1.25rem}
+
+/* ALERTS */
+.alerts-list{display:flex;flex-direction:column;gap:0.6rem}
+.alert-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;display:flex;align-items:flex-start;gap:1rem}
+.alert-tag{font-size:0.7rem;padding:3px 8px;border-radius:4px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.tag-price{background:rgba(255,112,112,0.15);color:#ff9090}
+.tag-content{background:rgba(62,207,142,0.12);color:#5ddba0}
+.alert-info{flex:1}
+.alert-company{font-size:0.85rem;font-weight:500;color:var(--text);margin-bottom:2px}
+.alert-desc{font-size:0.8rem;color:var(--muted)}
+.alert-time{font-size:0.75rem;color:var(--muted);white-space:nowrap}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;padding:2rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:440px}
+.modal h3{font-family:'Instrument Serif',serif;font-size:1.6rem;font-weight:400;color:var(--text);margin-bottom:0.4rem}
+.modal p{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem}
+.modal-btns{display:flex;gap:0.75rem;margin-top:1.5rem}
+.btn-cancel{flex:1;background:transparent;border:1px solid var(--border2);color:var(--text);padding:0.75rem;border-radius:8px;font-size:0.9rem;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-save{flex:1;background:var(--accent);color:#08090a;padding:0.75rem;border-radius:8px;font-size:0.9rem;font-weight:600;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/></svg>
+    </div>
+    RivalScope
+  </a>
+  <div class="nav-right">
+    <span class="user-email" id="user-email"></span>
+    <button class="btn-logout" onclick="logout()">Sign out</button>
+  </div>
+</nav>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <h1>Welcome back</h1>
+    <p>Sign in to your RivalScope dashboard</p>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login')">Sign in</button>
+      <button class="tab" onclick="switchTab('signup')">Create account</button>
+    </div>
+    <div class="field">
+      <label>Email address</label>
+      <input type="email" id="auth-email" placeholder="you@company.com"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="auth-password" placeholder="••••••••"/>
+    </div>
+    <button class="btn-auth" id="auth-btn" onclick="handleAuth()">Sign in</button>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-success" id="auth-success"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD SCREEN -->
+<div id="dashboard-screen">
+  <div class="dash-header">
+    <h2>Dashboard</h2>
+    <button class="btn-add" onclick="openModal()">+ Add competitor</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Rivals tracked</div>
+      <div class="stat-val" id="stat-rivals">0</div>
+      <div class="stat-sub">Monitored 24/7</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Alerts today</div>
+      <div class="stat-val" id="stat-alerts">0</div>
+      <div class="stat-sub">Changes detected</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Plan</div>
+      <div class="stat-val" style="font-size:1.4rem;padding-top:4px">Free</div>
+      <div class="stat-sub"><a href="index.html#pricing" style="color:var(--accent2);text-decoration:none;font-size:0.75rem">Upgrade →</a></div>
+    </div>
+  </div>
+
+  <div class="section-title">Your competitors</div>
+  <div class="competitors-list" id="competitors-list">
+    <div class="empty-state">
+      <p>No competitors added yet.<br/>Add your first one to start monitoring.</p>
+      <button class="btn-add" onclick="openModal()">+ Add competitor</button>
+    </div>
+  </div>
+
+  <div class="section-title">Recent alerts</div>
+  <div class="alerts-list" id="alerts-list">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:2rem;text-align:center">
+      <p style="color:var(--muted);font-size:0.88rem">No alerts yet — we'll notify you when something changes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ADD COMPETITOR MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3>Add a competitor</h3>
+    <p>Enter the details of the competitor you want to monitor.</p>
+    <div class="field">
+      <label>Company name</label>
+      <input type="text" id="comp-name" placeholder="Acme Corp"/>
+    </div>
+    <div class="field">
+      <label>Website URL</label>
+      <input type="url" id="comp-url" placeholder="https://acmecorp.com"/>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="addCompetitor()">Start monitoring</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://rrxkstgcrqxbsphzpxdi.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyeGtzdGdjcnF4YnNwaHpweGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwOTE1MzgsImV4cCI6MjA5NTY2NzUzOH0.0Kc8Upi_69fVG05YRaiilHY_R4ncX75ko-iwRQv7Zzo';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentTab = 'login';
+
+// Check session on load
+async function init() {
+  const { data: { session } } = await db.auth.getSession();
+  if (session) showDashboard(session.user);
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='signup'&&i===1)));
+  document.getElementById('auth-btn').textContent = tab === 'login' ? 'Sign in' : 'Create account';
+  document.querySelector('.auth-box h1').textContent = tab === 'login' ? 'Welcome back' : 'Create your account';
+  document.querySelector('.auth-box p').textContent = tab === 'login' ? 'Sign in to your RivalScope dashboard' : 'Start monitoring your competitors today';
+  hideMessages();
+}
+
+function hideMessages() {
+  document.getElementById('auth-error').style.display = 'none';
+  document.getElementById('auth-success').style.display = 'none';
+}
+
+function showError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function showSuccess(msg) {
+  const el = document.getElementById('auth-success');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+async function handleAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  hideMessages();
+  if (!email || !password) { showError('Please fill in all fields.'); return; }
+  const btn = document.getElementById('auth-btn');
+  btn.textContent = 'Loading...';
+  btn.disabled = true;
+
+  if (currentTab === 'login') {
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    if (error) { showError(error.message); btn.textContent = 'Sign in'; btn.disabled = false; return; }
+    showDashboard(data.user);
+  } else {
+    const { error } = await db.auth.signUp({ email, password });
+    if (error) { showError(error.message); btn.textContent = 'Create account'; btn.disabled = false; return; }
+    showSuccess('Account created! Check your email to confirm, then sign in.');
+    btn.textContent = 'Create account';
+    btn.disabled = false;
+  }
+}
+
+async function showDashboard(user) {
+  currentUser = user;
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('dashboard-screen').style.display = 'block';
+  document.getElementById('user-email').textContent = user.email;
+  await loadCompetitors();
+  await loadAlerts();
+}
+
+async function logout() {
+  await db.auth.signOut();
+  currentUser = null;
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('dashboard-screen').style.display = 'none';
+}
+
+async function loadCompetitors() {
+  const { data, error } = await db.from('competitors').select('*').order('created_at', { ascending: false });
+  if (error) return;
+  document.getElementById('stat-rivals').textContent = data.length;
+  const list = document.getElementById('competitors-list');
+  if (data.length === 0) {
+    list.innerHTML = `<div class="empty-state"><p>No competitors added yet.<br/>Add your first one to start monitoring.</p><button class="btn-add" onclick="openModal()">+ Add competitor</button></div>`;
+    return;
+  }
+  list.innerHTML = data.map(c => `
+    <div class="competitor-card">
+      <div class="comp-favicon">🏢</div>
+      <div class="comp-info">
+        <div class="comp-name">${c.name}</div>
+        <div class="comp-url">${c.url}</div>
+      </div>
+      <div class="comp-status"><span class="comp-dot"></span> Monitoring</div>
+      <button class="btn-delete" onclick="deleteCompetitor('${c.id}')">✕ Remove</button>
+    </div>
+  `).join('');
+}
+
+async function loadAlerts() {
+  const { data, error } = await db.from('alerts').select('*, competitors(name)').order('created_at', { ascending: false }).limit(10);
+  if (error) return;
+  document.getElementById('stat-alerts').textContent = data.length;
+  const list = document.getElementById('alerts-list');
+  if (data.length === 0) {
+    list.innerHTML = `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:2rem;text-align:center"><p style="color:var(--muted);font-size:0.88rem">No alerts yet — we'll notify you when something changes.</p></div>`;
+    return;
+  }
+  list.innerHTML = data.map(a => `
+    <div class="alert-card">
+      <span class="alert-tag ${a.type === 'price' ? 'tag-price' : 'tag-content'}">${a.type === 'price' ? 'Price' : 'Content'}</span>
+      <div class="alert-info">
+        <div class="alert-company">${a.competitors?.name || 'Unknown'}</div>
+        <div class="alert-desc">${a.description}</div>
+      </div>
+      <div class="alert-time">${timeAgo(a.created_at)}</div>
+    </div>
+  `).join('');
+}
+
+function timeAgo(dateStr) {
+  const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return Math.floor(diff/86400) + 'd ago';
+}
+
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('comp-name').value = '';
+  document.getElementById('comp-url').value = '';
+}
+
+async function addCompetitor() {
+  const name = document.getElementById('comp-name').value.trim();
+  const url = document.getElementById('comp-url').value.trim();
+  if (!name || !url) { alert('Please fill in both fields.'); return; }
+  const { error } = await db.from('competitors').insert({ name, url, user_id: currentUser.id });
+  if (error) { alert('Error: ' + error.message); return; }
+  closeModal();
+  await loadCompetitors();
+}
+
+async function deleteCompetitor(id) {
+  if (!confirm('Remove this competitor from monitoring?')) return;
+  await db.from('competitors').delete().eq('id', id);
+  await loadCompetitors();
+}
+
+init();
+</script>
+</body>
+</html>
